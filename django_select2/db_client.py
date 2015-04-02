@@ -10,20 +10,11 @@ class Client(object):
         This method is used to set a new value
         in the db.
         """
-        o = self.get(key)
-        if o is None:
-            o = KeyMap()
-            o.key = key
-
-        o.value = value
-        o.save()
+        KeyMap.objects.update_or_create(key=key, value=value)
 
     def get(self, key):
         """
         This method is used to retrieve a value
         from the db.
         """
-        try:
-            return KeyMap.objects.get(key=key).value
-        except KeyMap.DoesNotExist:
-            return None
+        return KeyMap.objects.filter(key=key).first()

@@ -26,17 +26,11 @@ class Client(object):
             self.cache.set(key, value)
 
     def get(self, key):
-        """
-        This method is used to retrieve a value
-        from the memcache server, if found, else it
-        is fetched from db.
-        """
+        """Get a value from the memcache server or db."""
         if self.cache:
-            v = self.cache.get(key)
-            if v is None:
-                v = self.db.get(key)
-                if v is not None:
-                    self.cache.set(key, v)
+            value = self.cache.get(key) or self.db.get(key)
+            if value:
+                self.cache.set(key, value)
         else:
             v = self.db.get(key)
         return v
